@@ -93,7 +93,7 @@ export function Home() {
                     <h3 className="font-serif text-xl mb-1">The Vara Lounge</h3>
                     <p className="text-sm text-vara-charcoal/60">Linen & Walnut</p>
                   </div>
-                  <span className="font-medium">$1,250</span>
+                  <span className="font-medium">Rs. 375,000</span>
                 </div>
               </Link>
             </motion.div>
@@ -124,7 +124,7 @@ export function Home() {
                     <h3 className="font-serif text-xl mb-1">Architect Dining Table</h3>
                     <p className="text-sm text-vara-charcoal/60">Solid Oak</p>
                   </div>
-                  <span className="font-medium">$2,800</span>
+                  <span className="font-medium">Rs. 840,000</span>
                 </div>
               </Link>
             </motion.div>
@@ -155,7 +155,7 @@ export function Home() {
                     <h3 className="font-serif text-xl mb-1">Cloud Modular Sofa</h3>
                     <p className="text-sm text-vara-charcoal/60">BouclÃ©</p>
                   </div>
-                  <span className="font-medium">$3,400</span>
+                  <span className="font-medium">Rs. 1,020,000</span>
                 </div>
               </Link>
             </motion.div>

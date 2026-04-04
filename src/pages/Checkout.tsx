@@ -71,7 +71,7 @@ export function Checkout() {
                       <div>
                         <div className="flex justify-between w-full">
                           <span className="font-medium">White-Glove Delivery</span>
-                          <span>$150</span>
+                          <span>Rs. 45,000</span>
                         </div>
                         <p className="text-sm text-vara-charcoal/60 mt-1">Room of choice, assembly, and packaging removal.</p>
                       </div>
@@ -145,18 +145,18 @@ export function Checkout() {
                 <div className="flex-1">
                   <h3 className="font-medium text-sm mb-1">The Vara Lounge</h3>
                   <p className="text-xs text-vara-charcoal/60 mb-2">Linen & Walnut</p>
-                  <p className="text-sm font-medium">$1,250</p>
+                  <p className="text-sm font-medium">Rs. 375,000</p>
                 </div>
               </div>
 
               <div className="space-y-3 text-sm mb-6 pb-6 border-b border-vara-charcoal/10">
                 <div className="flex justify-between">
                   <span className="text-vara-charcoal/70">Subtotal</span>
-                  <span>$1,250</span>
+                  <span>Rs. 375,000</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-vara-charcoal/70">Shipping (White-Glove)</span>
-                  <span>$150</span>
+                  <span>Rs. 45,000</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-vara-charcoal/70">Taxes</span>
@@ -166,7 +166,7 @@ export function Checkout() {
 
               <div className="flex justify-between items-end mb-8">
                 <span className="font-serif text-lg">Total</span>
-                <span className="font-medium text-xl">$1,400</span>
+                <span className="font-medium text-xl">Rs. 420,000</span>
               </div>
 
               <div className="space-y-4">

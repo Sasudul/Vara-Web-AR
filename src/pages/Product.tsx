@@ -1,24 +1,20 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { motion } from "motion/react";
-import { Box, Ruler, Leaf, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/components/ui/Button";
 import "@google/model-viewer";
+import { Box, Leaf, Ruler, ShieldCheck } from "lucide-react";
+import { motion } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams, Navigate } from "react-router-dom";
 
-export function Product() {
-  const { id } = useParams();
-  const [activeMaterial, setActiveMaterial] = useState("Linen");
-  const [showDimensions, setShowDimensions] = useState(false);
-
-  // Mock product data
-  const product = {
+// Centralized Product Database for Dynamic Routing
+const productsData: Record<string, any> = {
+  "vara-lounge-chair": {
     id: "vara-lounge-chair",
     name: "The Vara Lounge",
-    price: "$1,250",
+    price: "Rs. 375,000",
     description: "Architectural precision meets serene comfort. The Vara Lounge is designed to anchor your living space with its bold, geometric lines and soft, inviting textures.",
     materials: ["Linen", "Velvet", "BouclÃ©"],
     specs: {
-      dimensions: "W 32\" Ã— H 30\" Ã— D 34\"",
+      dimensions: 'W 32" Ã— H 30" Ã— D 34"',
       weight: "45 lbs",
       materials: "FSC-Certified Walnut, High-Resiliency Foam, Premium Linen",
       care: "Professional cleaning recommended. Vacuum regularly with a soft brush attachment."
@@ -27,14 +23,105 @@ export function Product() {
       "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=1000&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1000&auto=format&fit=crop"
     ],
-    modelSrc: "https://modelviewer.dev/assets/ShopifyModels/Chair.glb", // Placeholder GLB
-    iosSrc: "https://modelviewer.dev/shared-assets/models/Chair.usdz" // Placeholder USDZ
-  };
+    modelSrc: "https://modelviewer.dev/assets/ShopifyModels/Chair.glb",
+    iosSrc: "https://modelviewer.dev/shared-assets/models/Chair.usdz",
+    hotspots: { h: '30"', w: '32"', d: '34"' }
+  },
+  "vara-dining-table": {
+    id: "vara-dining-table",
+    name: "Architect Dining Table",
+    price: "Rs. 840,000",
+    description: "A masterclass in minimalism. The Architect Dining Table features solid oak craftsmanship with absolute geometric precision, anchoring your dining room with natural warmth.",
+    materials: ["Oak", "Walnut", "Ash"],
+    specs: {
+      dimensions: 'W 84" Ã— H 30" Ã— D 42"',
+      weight: "180 lbs",
+      materials: "Solid White Oak, Natural Matte Finish",
+      care: "Wipe clean with a damp cloth. Avoid harsh chemical cleaners."
+    },
+    images: [
+      "https://images.unsplash.com/photo-1577140917170-285929fb55b7?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?q=80&w=1000&auto=format&fit=crop"
+    ],
+    // Using GeoPlanter as a proxy for an architectural block table in the demo
+    modelSrc: "https://modelviewer.dev/assets/ShopifyModels/GeoPlanter.glb",
+    iosSrc: "",
+    hotspots: { h: '30"', w: '84"', d: '42"' }
+  },
+  "vara-sofa": {
+    id: "vara-sofa",
+    name: "Cloud Modular Sofa",
+    price: "Rs. 1,020,000",
+    description: "Unstructured elegance. The Cloud Modular Sofa offers deep seating and supreme BouclÃ© softness, effortlessly adapting to any modern layout.",
+    materials: ["BouclÃ©", "Linen", "Cotton"],
+    specs: {
+      dimensions: 'W 112" Ã— H 32" Ã— D 40"',
+      weight: "220 lbs",
+      materials: "Engineered Hardwood, Down-Blend Cushions, BouclÃ© Fabric",
+      care: "Flip and fluff cushions regularly. Spot clean with dry cleaning solvent."
+    },
+    images: [
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=1000&auto=format&fit=crop"
+    ],
+    // Using Khronos SheenChair as a plush sofa-like module proxy
+    modelSrc: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF-Binary/SheenChair.glb",
+    iosSrc: "",
+    hotspots: { h: '32"', w: '112"', d: '40"' }
+  }
+};
+
+export function Product() {
+  const { id } = useParams<{ id: string }>();
+  // Use product if exists, else fallback to lounging chair or 404
+  const product = productsData[id || "vara-lounge-chair"];
+  const viewerRef = useRef<any>(null);
+
+  const [activeMaterial, setActiveMaterial] = useState(product?.materials[0] || "Linen");
+  const [showDimensions, setShowDimensions] = useState(false);
 
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    // Reset material when changing products
+    if (product) setActiveMaterial(product.materials[0]);
+  }, [id, product]);
+
+  // WebAR Material Swapping Logic
+  const applyMaterialProperties = useCallback(() => {
+    const viewer = viewerRef.current;
+    if (!viewer || !viewer.model || !viewer.model.materials) return;
+
+    // Use material 0 generally, though complex models might use multiple
+    const material = viewer.model.materials[0];
+    if (!material) return;
+
+    const pbr = material.pbrMetallicRoughness;
+
+    // Generic Color Swapping based on the clicked material name
+    const format = activeMaterial.toLowerCase();
+    
+    if (format.includes("linen") || format.includes("cotton") || format.includes("ash")) {
+      pbr.setBaseColorFactor([0.85, 0.82, 0.78, 1]); // Warm beige
+      pbr.setRoughnessFactor(0.9);
+      pbr.setMetallicFactor(0.0);
+    } else if (format.includes("velvet") || format.includes("walnut")) {
+      pbr.setBaseColorFactor([0.15, 0.15, 0.16, 1]); // Deep Charcoal/Brown
+      pbr.setRoughnessFactor(0.4); 
+      pbr.setMetallicFactor(0.1);
+    } else if (format.includes("bouclÃ©") || format.includes("oak")) {
+      pbr.setBaseColorFactor([0.92, 0.90, 0.87, 1]); // Bright Off-white/Bleached Wood
+      pbr.setRoughnessFactor(1.0); 
+      pbr.setMetallicFactor(0.0);
+    }
+  }, [activeMaterial]);
+
+  // Re-apply materials when the selection changes
+  useEffect(() => {
+    applyMaterialProperties();
+  }, [activeMaterial, applyMaterialProperties]);
+
+  if (!product) return <Navigate to="/" />;
 
   return (
     <div className="min-h-screen bg-vara-cream pt-24 pb-16">
@@ -43,7 +130,7 @@ export function Product() {
           
           {/* Left: Photography Gallery */}
           <div className="lg:w-1/2 space-y-8">
-            {product.images.map((img, idx) => (
+            {product.images.map((img: string, idx: number) => (
               <motion.div 
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
@@ -79,19 +166,25 @@ export function Product() {
                 <div className="mb-8">
                   <h3 className="text-sm font-medium uppercase tracking-wider mb-4">Material: {activeMaterial}</h3>
                   <div className="flex gap-4">
-                    {product.materials.map((mat) => (
-                      <button
-                        key={mat}
-                        onClick={() => setActiveMaterial(mat)}
-                        className={`w-12 h-12 rounded-full border-2 transition-all ${
-                          activeMaterial === mat ? "border-vara-charcoal scale-110" : "border-transparent hover:scale-105"
-                        }`}
-                        style={{
-                          backgroundColor: mat === "Linen" ? "#E8E3D9" : mat === "Velvet" ? "#2C2C2B" : "#D4CFC4"
-                        }}
-                        aria-label={`Select ${mat}`}
-                      />
-                    ))}
+                    {product.materials.map((mat: string) => {
+                      // Determine subtle UI button color based on standard fabric mapping
+                      const m = mat.toLowerCase();
+                      const bgColor = (m.includes("linen") || m.includes("cotton") || m.includes("ash")) ? "#E8E3D9"
+                        : (m.includes("velvet") || m.includes("walnut")) ? "#2C2C2B"
+                        : "#d4c9c4ff";
+
+                      return (
+                        <button
+                          key={mat}
+                          onClick={() => setActiveMaterial(mat)}
+                          className={`w-12 h-12 rounded-full border-2 transition-all ${
+                            activeMaterial === mat ? "border-vara-charcoal scale-110" : "border-transparent hover:scale-105"
+                          }`}
+                          style={{ backgroundColor: bgColor }}
+                          aria-label={`Select ${mat}`}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -99,8 +192,10 @@ export function Product() {
                 <div className="relative aspect-square bg-[#EAE8E3] mb-8 overflow-hidden group">
                   {/* @ts-ignore */}
                   <model-viewer
+                    ref={viewerRef}
+                    onLoad={applyMaterialProperties}
                     src={product.modelSrc}
-                    ios-src={product.iosSrc}
+                    ios-src={product.iosSrc || undefined}
                     alt={product.name}
                     ar
                     ar-modes="webxr scene-viewer quick-look"
@@ -113,6 +208,21 @@ export function Product() {
                     <div slot="poster" className="absolute inset-0 flex items-center justify-center bg-[#EAE8E3]">
                        <div className="w-8 h-8 border-4 border-vara-charcoal border-t-transparent rounded-full animate-spin"></div>
                     </div>
+                    
+                    {/* Interactive 3D Hotspots for Dimensions */}
+                    {showDimensions && (
+                      <>
+                        <div slot="hotspot-height" data-position="0 0.8 0" data-normal="0 1 0" className="bg-white/90 backdrop-blur px-2 py-1 text-[10px] font-bold rounded shadow-sm text-vara-charcoal border border-black/10 origin-bottom-left">
+                          H: {product.hotspots.h}
+                        </div>
+                        <div slot="hotspot-width" data-position="-0.3 0.4 0" data-normal="-1 0 0" className="bg-white/90 backdrop-blur px-2 py-1 text-[10px] font-bold rounded shadow-sm text-vara-charcoal border border-black/10 origin-bottom-left">
+                          W: {product.hotspots.w}
+                        </div>
+                        <div slot="hotspot-depth" data-position="0 0.1 0.4" data-normal="0 0 1" className="bg-white/90 backdrop-blur px-2 py-1 text-[10px] font-bold rounded shadow-sm text-vara-charcoal border border-black/10 origin-bottom-left">
+                          D: {product.hotspots.d}
+                        </div>
+                      </>
+                    )}
                     
                     {/* Custom AR Button */}
                     <button 
@@ -131,23 +241,11 @@ export function Product() {
                   >
                     <Ruler className="w-3 h-3" /> {showDimensions ? "Hide Specs" : "Show Specs"}
                   </button>
-
-                  {/* Dimensions HUD */}
-                  {showDimensions && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="absolute top-14 left-4 bg-vara-charcoal/90 backdrop-blur text-vara-cream p-4 text-xs space-y-2 rounded-sm z-10"
-                    >
-                      <p><span className="text-vara-cream/60">Dimensions:</span> {product.specs.dimensions}</p>
-                      <p><span className="text-vara-cream/60">Weight:</span> {product.specs.weight}</p>
-                    </motion.div>
-                  )}
                 </div>
 
                 {/* Add to Cart */}
                 <Button size="lg" className="w-full mb-12">
-                  Add to Cart â {product.price}
+                  Add to Cart {product.price}
                 </Button>
 
                 {/* Contextual Data */}
