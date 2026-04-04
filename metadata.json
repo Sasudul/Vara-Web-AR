@@ -1,0 +1,5 @@
+{
+  "name": "Vara - The Future of Home",
+  "description": "A high-end, architectural, and serene WebAR furniture shopping experience.",
+  "requestFramePermissions": ["camera"]
+}
