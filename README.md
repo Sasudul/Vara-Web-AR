@@ -1,55 +1,68 @@
-# Vara — The Future of Home
+<br />
+<div align="center">
+  <h1 align="center">Vara | Earth-Modern WebAR Architecture</h1>
+  <p align="center">
+    A high-end, architectural digital gallery bridging the gap between digital retail and physical reality.
+</div>
 
-![Vara - Earth-Modern Minimalism](https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6)
+<div align="center">
+  <img src="https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-6.2.0-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4.1.14-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/TypeScript-5.8.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Google_<model--viewer>-WebAR-EA4335?style=for-the-badge&logo=google&logoColor=white" alt="Model-Viewer" />
+</div>
 
-## Brand Concept
-**Vara** is a high-end furniture and lifestyle brand defined by **Earth-Modern Minimalism**. Our digital experience is designed to feel architectural, serene, and premium, bridging the gap between digital gallery and physical reality.
+<br />
 
-## Technical Architecture: WebAR Integration
-The core of the Vara experience is **"The Vara Lens"**, a seamless WebAR integration that allows customers to experience products in their own space without the need for additional apps.
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#key-features">Key Features</a></li>
+    <li><a href="#tech-stack">Tech Stack</a></li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#design-system">Design System</a></li>
+    <li><a href="#project-structure">Project Structure</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
 
-### Core AR Features
-- **Auto-Scale**: Forcing 1:1 real-world scaling upon placement for clinical accuracy.
-- **Material Configurator**: Real-time texture swapping (e.g., Linen to Velvet) within the AR viewer.
-- **Dimensions Overlay**: A toggleable HUD showing real-time measurements in the AR view.
-- **Cross-Platform Support**: Powered by Google's `<model-viewer>`, supporting `.GLB` (Android/Desktop) and `.USDZ` (iOS Quick Look).
+## 🛋️ About The Project
 
-## Visual Identity
-- **Palette**: Soft Cream (`#F5F5F0`), Deep Charcoal (`#2C2C2B`), and Muted Terracotta (`#B36A5E`) or Sage Green (`#87947E`).
-- **Typography**: Geometric Sans-Serif (**Montserrat**) for UI; High-contrast Serif (**Playfair Display**) for editorial headings.
-- **Micro-interactions**: Physical-weight animations with fluid grace using `motion`.
+**Vara** is a conceptual high-end furniture and lifestyle brand defined by **Earth-Modern Minimalism**. 
 
-## Project Structure
-- **Homepage**: Hero video/image background with clear CTA.
-- **Product Pages**: Split-View Gallery (Photography on left, 3D Model on right).
-- **Navigation**: Ghost header that transitions to solid on scroll.
-- **Checkout**: Seamless, one-page mobile-optimized checkout.
+Traditional furniture e-commerce often feels cluttered and transactional. Vara aims to bypass that by offering a "Museum-Grade" digital experience. The platform prioritizes serene aesthetics, fluid animations, and a seamless **WebAR** integration that redefines how customers interact with spatial products online, directly from their mobile browser without native apps.
 
-## Technical Setup
+## ✨ Key Features
 
-### Prerequisites
-- Node.js (Latest LTS recommended)
-- NPM or PNPM
+* **The Vara Lens (WebAR Core):**
+    * **Absolute Scaling:** Forces 1:1 real-world scaling upon placement for clinical measurement accuracy.
+    * **Material Configurator:** Instantly swap textures (e.g., Linen to Velvet) within the AR viewer.
+    * **Dimensions HUD:** A toggleable Heads-Up Display showing real-time physical measurements ($L \times W \times H$).
+    * **Cross-Platform:** Powered by Google's `<model-viewer>`, supporting `.GLB` for Android/Desktop and `.USDZ` for iOS Quick Look.
+* **Earth-Modern Interface:** A clean, minimal layout focused on high-definition photography and architectural whitespace.
+* **Fluid Micro-Interactions:** Subtle parallax effects and "soft-spring" animations mimic physical weight and elegance using the `motion` API.
+* **Ghost Navigation:** Transparent header that transitions elegantly into a frosted glass state upon scrolling.
 
-### Installation
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+## 🛠 Tech Stack
 
-### Building for Production
-```bash
-npm run build
-```
+The platform is built on modern, scalable web technologies designed for high performance and seamless WebXR context handoffs:
 
-## SEO & Social
-Optimized for high-end home goods and AR retail keywords. Features a "Share my Space" integration for social sharing on Instagram and Pinterest with `#VaraHome`.
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | [React 19](https://react.dev/) + [Vite](https://vitejs.dev/) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) |
+| **AR Engine** | [Google <model-viewer>](https://modelviewer.dev/) |
+| **Animations** | [Motion (Framer Motion API)](https://motion.dev/) |
+| **Routing** | [React Router v7](https://reactrouter.com/) |
+| **Icons** | [Lucide React](https://lucide.dev/) |
 
----
-
-*Designed for professional luxury and high-performance retail.*
+##
