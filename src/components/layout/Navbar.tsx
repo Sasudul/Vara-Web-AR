@@ -1,13 +1,21 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ShoppingBag, Menu, X } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-import { motion, AnimatePresence } from "motion/react";
+import { Menu, ShoppingBag, User, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
+import { AuthModal } from "../auth/AuthModal";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const location = useLocation();
+
+  const { user, logout } = useAuth();
+  const { cart } = useCart();
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   // We assume the home page hero image is dark/mixed, while product pages are solid light.
   const isHomePage = location.pathname === "/" || location.pathname.endsWith("/index.html") || !location.pathname.includes("product") && !location.pathname.includes("checkout");
@@ -21,7 +29,7 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Living", path: "/category/living" },
+    { name: "Home", path: "/category/living" },
     { name: "Dining", path: "/category/dining" },
     { name: "Bedroom", path: "/category/bedroom" },
     { name: "The AR Experience", path: "/ar-experience" },
@@ -59,8 +67,23 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center space-x-6 z-50">
-            <Link to="/checkout" className="hover:text-vara-terracotta transition-colors">
+            {user ? (
+              <Link to="/profile" className="text-sm font-medium hover:text-vara-terracotta transition-colors hidden md:block">
+                My Profile ({user.name.split(' ')[0]})
+              </Link>
+            ) : (
+              <button onClick={() => setIsAuthModalOpen(true)} className="hover:text-vara-terracotta transition-colors">
+                <User className="w-5 h-5" />
+              </button>
+            )}
+            
+            <Link to="/checkout" className="hover:text-vara-terracotta transition-colors relative">
               <ShoppingBag className="w-5 h-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-vara-terracotta text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
             <button
               className="md:hidden hover:text-vara-terracotta transition-colors"
@@ -96,6 +119,7 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
 }

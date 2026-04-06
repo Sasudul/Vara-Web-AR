@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/src/components/ui/Button";
-import { Shield, Truck, CreditCard } from "lucide-react";
+import { Shield, Truck, CreditCard, Trash2 } from "lucide-react";
+import { useCart } from "../context/CartContext";
 
 export function Checkout() {
   const [step, setStep] = useState(1);
+  const { cart, cartTotal, removeFromCart } = useCart();
+  const SHIPPING_COST = 45000;
 
   // Scroll to top on mount
   useEffect(() => {
@@ -133,30 +136,44 @@ export function Checkout() {
             <div className="bg-white p-8 shadow-sm sticky top-32">
               <h2 className="text-xl font-serif mb-6">Order Summary</h2>
               
-              <div className="flex gap-4 mb-6 pb-6 border-b border-vara-charcoal/10">
-                <div className="w-20 h-24 bg-vara-cream overflow-hidden">
-                  <img 
-                    src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=200&auto=format&fit=crop" 
-                    alt="The Vara Lounge" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
+              {cart.length === 0 ? (
+                <p className="text-sm text-vara-charcoal/60 mb-6 pb-6 border-b border-vara-charcoal/10">Your cart is empty.</p>
+              ) : (
+                <div className="space-y-4 mb-6 pb-6 border-b border-vara-charcoal/10 max-h-[40vh] overflow-y-auto pr-2">
+                  {cart.map((item, index) => (
+                    <div key={`${item.id}-${index}`} className="flex gap-4">
+                      <div className="w-20 h-24 bg-vara-cream overflow-hidden">
+                        <img 
+                          src={item.image} 
+                          alt={item.name} 
+                          className="w-full h-full object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                      <div className="flex-1 relative">
+                        <h3 className="font-medium text-sm mb-1">{item.name}</h3>
+                        <p className="text-xs text-vara-charcoal/60 mb-2">{item.material} / Qty {item.quantity}</p>
+                        <p className="text-sm font-medium">Rs. {(item.price * item.quantity).toLocaleString()}</p>
+                        <button 
+                          onClick={() => removeFromCart(item.id, item.material)} 
+                          className="absolute top-0 right-0 text-red-500/50 hover:text-red-500"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-medium text-sm mb-1">The Vara Lounge</h3>
-                  <p className="text-xs text-vara-charcoal/60 mb-2">Linen & Walnut</p>
-                  <p className="text-sm font-medium">Rs. 375,000</p>
-                </div>
-              </div>
+              )}
 
               <div className="space-y-3 text-sm mb-6 pb-6 border-b border-vara-charcoal/10">
                 <div className="flex justify-between">
                   <span className="text-vara-charcoal/70">Subtotal</span>
-                  <span>Rs. 375,000</span>
+                  <span>Rs. {cartTotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-vara-charcoal/70">Shipping (White-Glove)</span>
-                  <span>Rs. 45,000</span>
+                  <span>Rs. {cartTotal > 0 ? SHIPPING_COST.toLocaleString() : 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-vara-charcoal/70">Taxes</span>
@@ -166,7 +183,9 @@ export function Checkout() {
 
               <div className="flex justify-between items-end mb-8">
                 <span className="font-serif text-lg">Total</span>
-                <span className="font-medium text-xl">Rs. 420,000</span>
+                <span className="font-medium text-xl">
+                  Rs. {cartTotal > 0 ? (cartTotal + SHIPPING_COST).toLocaleString() : 0}
+                </span>
               </div>
 
               <div className="space-y-4">

@@ -4,6 +4,7 @@ import { Box, Leaf, Ruler, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 // Centralized Product Database for Dynamic Routing
 const productsData: Record<string, any> = {
@@ -77,6 +78,7 @@ export function Product() {
   const product = productsData[id || "vara-lounge-chair"];
   const viewerRef = useRef<any>(null);
 
+  const { addToCart } = useCart();
   const [activeMaterial, setActiveMaterial] = useState(product?.materials[0] || "Linen");
   const [showDimensions, setShowDimensions] = useState(false);
 
@@ -244,7 +246,22 @@ export function Product() {
                 </div>
 
                 {/* Add to Cart */}
-                <Button size="lg" className="w-full mb-12">
+                <Button 
+                  size="lg" 
+                  className="w-full mb-12"
+                  onClick={() => {
+                    addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: parseInt(product.price.replace(/[^0-9]/g, "")),
+                      quantity: 1,
+                      material: activeMaterial,
+                      image: product.images[0] // Add the first image for cart visual
+                    });
+                    // Simple UX feedback
+                    alert(`Added ${product.name} (${activeMaterial}) to cart!`);
+                  }}
+                >
                   Add to Cart {product.price}
                 </Button>
 
