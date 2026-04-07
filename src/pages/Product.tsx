@@ -25,7 +25,7 @@ const productsData: Record<string, any> = {
       "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1000&auto=format&fit=crop"
     ],
     modelSrc: "https://modelviewer.dev/assets/ShopifyModels/Chair.glb",
-    iosSrc: "https://modelviewer.dev/shared-assets/models/Chair.usdz",
+    iosSrc: "https://modelviewer.dev/assets/ShopifyModels/Chair.usdz",
     hotspots: { h: '30"', w: '32"', d: '34"' }
   },
   "vara-dining-table": {
@@ -46,7 +46,7 @@ const productsData: Record<string, any> = {
     ],
     // Using GeoPlanter as a proxy for an architectural block table in the demo
     modelSrc: "https://modelviewer.dev/assets/ShopifyModels/GeoPlanter.glb",
-    iosSrc: "",
+    iosSrc: "https://modelviewer.dev/assets/ShopifyModels/GeoPlanter.usdz",
     hotspots: { h: '30"', w: '84"', d: '42"' }
   },
   "vara-sofa": {
