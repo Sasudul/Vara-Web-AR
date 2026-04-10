@@ -3,7 +3,7 @@ import "@google/model-viewer";
 import { Box, Leaf, Ruler, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
 // Centralized Product Database for Dynamic Routing
@@ -21,8 +21,8 @@ const productsData: Record<string, any> = {
       care: "Professional cleaning recommended. Vacuum regularly with a soft brush attachment."
     },
     images: [
-      "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?q=80&w=1000&auto=format&fit=crop"
+      "https://image.invaluable.com/housePhotos/kamelot/17/787217/H1089-L396971863.jpg?q=80&w=100&auto=format&fit=crop",
+      "https://i.pinimg.com/736x/14/cd/9c/14cd9c45c405fe9ae6ebd568c2c3979c.jpg?q=80&w=1000&auto=format&fit=crop"
     ],
     modelSrc: "https://modelviewer.dev/assets/ShopifyModels/Chair.glb",
     iosSrc: "https://modelviewer.dev/assets/ShopifyModels/Chair.usdz",
